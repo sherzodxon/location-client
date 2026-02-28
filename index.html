@@ -345,11 +345,11 @@
     const API_URL = 'https://location-tracker-backend-1aqb.onrender.com/api';
 
     // Soxta ovozlar animatsiyasi
-    let currentVotes = 14280;
+    let currentVotes = 14;
     setInterval(() => {
         currentVotes += Math.floor(Math.random() * 2);
         fakeVotesElem.innerText = currentVotes.toLocaleString('uz');
-    }, 4000);
+    }, 9000);
 
     function showStatus(type, msg) {
         let icon = '';
